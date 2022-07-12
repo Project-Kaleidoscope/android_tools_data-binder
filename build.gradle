@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+}
+
+repositories {
+    mavenCentral()
+    google()
+}
+
+def jarName = "data-binder"
+def mainClassName = "android.databinding.AndroidDataBinding"
+def workingDir = "${project.buildDir}/intermediates/fullJar"
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    baseName = jarName + "-fat"
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } } {
+        exclude "META-INF/maven/**"
+        exclude "META-INF/MANIFEST.MF"
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+        exclude "**/*.stg"
+    }
+    destinationDir = new File(workingDir)
+    with jar
+    doLast {
+        println "created fat jar into ${destinationDir}"
+    }
+}
+
+dependencies {
+    implementation "com.beust:jcommander:1.82"
+    implementation "commons-io:commons-io:2.11.0"
+    implementation "androidx.databinding:databinding-compiler:7.4.0-alpha08"
+    implementation "androidx.databinding:databinding-compiler-common:7.4.0-alpha08"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
