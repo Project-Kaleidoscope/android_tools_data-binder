@@ -40,7 +40,7 @@ public class ProcessXmlOptions {
     private File resInput;
 
     @Parameter(names = "-resOutput", required = true, converter = FileConverter.class,
-            description = "The output folder which will contain processes resources. This should "
+            description = "The output zip file or folder which will contain processes resources. This should "
                     + "be the input for aapt.")
     private File resOutput;
 
@@ -58,6 +58,11 @@ public class ProcessXmlOptions {
                             + " the given"
                             + " layout-info out folder.")
     private boolean zipLayoutInfo = true;
+
+    @Parameter(names = "-zipResOutput", required = false, arity = 1,
+            description =
+                    "Whether the generated resources files should be zipped into 1 or not.")
+    private boolean zipResOutput = true;
 
     @Parameter(
             names = "-enableViewBinding", required = false,
@@ -100,6 +105,10 @@ public class ProcessXmlOptions {
         return zipLayoutInfo;
     }
 
+    public boolean shouldZipResOutput() {
+        return zipResOutput;
+    }
+
     public void setAppId(String appId) {
         this.appId = appId;
     }
@@ -135,6 +144,9 @@ public class ProcessXmlOptions {
     public void setZipLayoutInfo(boolean zipLayoutInfo) {
         this.zipLayoutInfo = zipLayoutInfo;
     }
+    public void setZipResOutput(boolean zipResOutput) {
+        this.zipResOutput = zipResOutput;
+    }
 
     @Override
     public String toString() {
@@ -142,6 +154,7 @@ public class ProcessXmlOptions {
                 "appId='" + appId + '\'' +
                 ", resInput=" + resInput +
                 ", resOutput=" + resOutput +
+                ", zipResOutput=" + zipResOutput +
                 ", layoutInfoOutput=" + layoutInfoOutput +
                 ", zipLayoutInfo=" + zipLayoutInfo +
                 ", useAndroidX=" + useAndroidX +

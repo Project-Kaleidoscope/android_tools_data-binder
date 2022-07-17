@@ -91,10 +91,15 @@ object AndroidDataBinding {
     @JvmStatic
     fun processResources(processXmlOptions: ProcessXmlOptions) {
         val processor = createXmlProcessor(processXmlOptions)
+        val resOutputDir = if (processXmlOptions.shouldZipResOutput()) {
+            Files.createTempDirectory("db-resources-out").toFile()
+        } else {
+            processXmlOptions.resOutput
+        }
         val input = LayoutXmlProcessor.ResourceInput(
                 false,
                 processXmlOptions.resInput,
-                processXmlOptions.resOutput
+                resOutputDir
         )
         L.setDebugLog(true)
         processor.processResources(input,
@@ -109,6 +114,9 @@ object AndroidDataBinding {
             L.d("writing info zip to ${outZip.canonicalPath}")
         } else {
             processor.writeLayoutInfoFiles(processXmlOptions.layoutInfoOutput)
+        }
+        if (processXmlOptions.shouldZipResOutput()) {
+            ZipUtil.zip(resOutputDir, processXmlOptions.resOutput)
         }
     }
 

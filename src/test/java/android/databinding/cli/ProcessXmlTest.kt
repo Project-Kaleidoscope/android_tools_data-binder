@@ -53,6 +53,7 @@ class ProcessXmlTest {
             resOutput = resOut
             layoutInfoOutput = infoOut
             setZipLayoutInfo(useZip)
+            setZipResOutput(false)
         }
         processResources(options)
         assertThat(File(resOut, "layout/activity.xml").exists(), `is`(true))

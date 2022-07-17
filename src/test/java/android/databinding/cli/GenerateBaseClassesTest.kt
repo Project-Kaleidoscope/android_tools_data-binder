@@ -111,6 +111,7 @@ class GenerateBaseClassesTest {
             resOutput = resOut
             layoutInfoOutput = infoOut
             setZipLayoutInfo(true)
+            setZipResOutput(false)
         }
         AndroidDataBinding.processResources(options)
         val layoutInfoZip = File(infoOut, "layout-info.zip")
