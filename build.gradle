@@ -8,6 +8,15 @@ repositories {
     google()
 }
 
+static def getGitCommit() {
+    def cmd = 'git rev-parse --short HEAD'
+    def gitCommit = cmd.execute().text.trim()
+    if (gitCommit.isEmpty()) {
+        return 'non-git-build'
+    }
+    return gitCommit
+}
+
 def jarName = "data-binder"
 def mainClassName = "android.databinding.AndroidDataBinding"
 def workingDir = "${project.buildDir}/intermediates/fullJar"
@@ -16,7 +25,7 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Main-Class': mainClassName
     }
-    baseName = jarName + "-fat"
+    baseName = jarName + "-fat-" + getGitCommit()
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } } {
         exclude "META-INF/maven/**"
@@ -28,7 +37,7 @@ task fatJar(type: Jar) {
     destinationDir = new File(workingDir)
     with jar
     doLast {
-        println "created fat jar into ${destinationDir}"
+        println "created fat jar into ${destinationDir}/${baseName}.jar"
     }
 }
 
