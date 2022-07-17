@@ -105,13 +105,20 @@ object AndroidDataBinding {
         processor.processResources(input,
             processXmlOptions.isEnableViewBinding, processXmlOptions.isEnableDataBinding)
         if (processXmlOptions.shouldZipLayoutInfo()) {
-            val outZip = File(processXmlOptions.layoutInfoOutput,
-                    "layout-info.zip")
-            FileUtils.forceMkdir(processXmlOptions.layoutInfoOutput)
-            val zfw = ZipFileWriter(outZip)
-            processor.writeLayoutInfoFiles(processXmlOptions.layoutInfoOutput, zfw)
+            val outDir : File
+            val zipFile : File
+            if (processXmlOptions.layoutInfoOutput.toString().lowercase().endsWith(".zip")) {
+                outDir = processXmlOptions.layoutInfoOutput.parentFile
+                zipFile = processXmlOptions.layoutInfoOutput
+            } else {
+                outDir = processXmlOptions.layoutInfoOutput
+                zipFile = File(outDir, "layout-info.zip")
+            }
+            FileUtils.forceMkdir(outDir)
+            val zfw = ZipFileWriter(zipFile)
+            processor.writeLayoutInfoFiles(outDir, zfw)
             zfw.close()
-            L.d("writing info zip to ${outZip.canonicalPath}")
+            L.d("writing info zip to ${zipFile.canonicalPath}")
         } else {
             processor.writeLayoutInfoFiles(processXmlOptions.layoutInfoOutput)
         }
