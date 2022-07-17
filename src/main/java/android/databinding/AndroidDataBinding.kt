@@ -94,11 +94,11 @@ object AndroidDataBinding {
         val resOutputDir = if (processXmlOptions.shouldZipResOutput()) {
             Files.createTempDirectory("db-resources-out").toFile()
         } else {
-            processXmlOptions.resOutput
+            processXmlOptions.resOutput.absoluteFile
         }
         val input = LayoutXmlProcessor.ResourceInput(
                 false,
-                processXmlOptions.resInput,
+                processXmlOptions.resInput.absoluteFile,
                 resOutputDir
         )
         L.setDebugLog(true)
