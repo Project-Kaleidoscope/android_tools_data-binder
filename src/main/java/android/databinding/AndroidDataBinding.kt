@@ -160,6 +160,7 @@ object AndroidDataBinding {
         if (options.zipSourceOutput) {
             (sourceFileWriter as ZipFileWriter).close()
         }
+        options.classInfoOut.parentFile.mkdirs()
         // we need to zip class info because blaze likes it better
         ZipUtil.zip(classInfoOutFolder, options.classInfoOut)
     }
