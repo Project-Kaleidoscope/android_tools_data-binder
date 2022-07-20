@@ -135,13 +135,12 @@ object AndroidDataBinding {
     @JvmStatic
     fun generateBaseClasses(options: GenerateBaseClassesOptions) {
         val layoutInfoFolder = prepareInput(arrayListOf(options.layoutInfoFolder))
-        val classInfoOutFolder = Files.createTempDirectory("db-class-info-out").toFile()
         val args = LayoutInfoInput.Args(
                 outOfDate = emptyList(),
                 removed = emptyList(),
                 infoFolder = layoutInfoFolder,
                 dependencyClassesFolders = options.dependencyClassInfoFolders,
-                artifactFolder = classInfoOutFolder,
+                artifactFolder = options.classInfoOut,
                 packageName = options.packageName,
                 logFolder = Files.createTempDirectory("db-incremental-log").toFile(),
                 incremental = false,
@@ -160,9 +159,6 @@ object AndroidDataBinding {
         if (options.zipSourceOutput) {
             (sourceFileWriter as ZipFileWriter).close()
         }
-        options.classInfoOut.parentFile.mkdirs()
-        // we need to zip class info because blaze likes it better
-        ZipUtil.zip(classInfoOutFolder, options.classInfoOut)
     }
 
     /**

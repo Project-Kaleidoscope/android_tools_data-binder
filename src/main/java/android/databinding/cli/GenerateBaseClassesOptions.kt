@@ -70,7 +70,7 @@ class GenerateBaseClassesOptions {
      * dependants.
      */
     @Parameter(
-        names = ["-classInfoOut"], required = true, description = "The output file " +
+        names = ["-classInfoOut"], required = true, description = "The output folder " +
                 "where this task will generate the class info file. That metadata should be " +
                 "passed down to dependants"
     )
